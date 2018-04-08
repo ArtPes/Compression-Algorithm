@@ -1,4 +1,4 @@
-def encode(input_string):
+def RLE_encode(input_string):
     count = 1
     prev = ''
     lst = []
@@ -16,13 +16,13 @@ def encode(input_string):
         try:
             entry = (character, count)
             lst.append(entry)
-            return (lst, 0)
+            return lst
         except Exception as e:
             print("Exception encountered {e}".format(e=e))
-            return (e, 1)
+            return e
 
 
-def decode(lst):
+def RLE_decode(lst):
     q = ""
     for character, count in lst:
         q += character * count
@@ -41,10 +41,3 @@ print(r'''
                                
 
 ''')
-print('Insert Text: ')
-text = input()
-value = encode(text)
-if value[1] == 0:
-    print("Encoded value is {}".format(value[0]))
-    decode_text = decode(value[0])
-    print('Decoded text is:' +decode_text)

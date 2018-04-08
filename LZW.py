@@ -1,18 +1,20 @@
 from io import StringIO
 
 
-def compress(uncompressed):
+def LWZ_compress(uncompressed):
     """Compress a string to a list of output symbols."""
 
     # Build the dictionary.
     dict_size = 256
-    dictionary = dict((chr(i), i) for i in range(dict_size))
-    # in Python 3: dictionary = {chr(i): i for i in range(dict_size)}
+    #dictionary = dict((chr(i), i) for i in range(dict_size))
+    # in Python 3:
+    dictionary = {chr(i): i for i in range(dict_size)}
 
     w = ""
     result = []
     for c in uncompressed:
         wc = w + c
+        #print('stringa: '+wc)
         if wc in dictionary:
             w = wc
         else:
@@ -28,7 +30,7 @@ def compress(uncompressed):
     return result
 
 
-def decompress(compressed):
+def LWZ_decompress(compressed):
     """Decompress a list of output ks to a string."""
     #
 
@@ -70,9 +72,4 @@ print(r'''
 |_______| /________|    \__/  \__/     
 
 ''')
-print('Insert Text: ')
-text = input()
-compressed = compress(text)
-print(compressed)
-decompressed = decompress(compressed)
-print(decompressed)
+
