@@ -7,7 +7,7 @@ def start_LZW(text):
     compressed_LZW = LWZ_compress(text)
 
     # scrivo su file il testo compresso
-    compress_text_LZW = open('compress_text_LZW', 'w')
+    compress_text_LZW = open('files/compress_text_LZW', 'w')
     for c in compressed_LZW:
         compress_text_LZW.write(str(c))
     compress_text_LZW.close()
@@ -17,7 +17,7 @@ def start_LZW(text):
     decompressed_LZW = LWZ_decompress(compressed_LZW)
 
     # scrivo su file il testo decompresso
-    decompress_text_LZW = open('decompress_text_LZW', 'w')
+    decompress_text_LZW = open('files/decompress_text_LZW', 'w')
     for d in decompressed_LZW:
         decompress_text_LZW.write(d)
     decompress_text_LZW.close()
@@ -28,7 +28,7 @@ def start_LZW(text):
 def start_RLE(text):
     compressed_RLE = RLE_encode(text)
     # scrivo su file il testo compresso
-    compress_text_RLE = open('compress_text_RLE', 'w')
+    compress_text_RLE = open('files/compress_text_RLE', 'w')
     for c in compressed_RLE:
         compress_text_RLE.write(str(c))
     compress_text_RLE.close()
@@ -38,7 +38,7 @@ def start_RLE(text):
     decompressed_RLE = RLE_decode(compressed_RLE)
 
     # scrivo su file il testo decompresso
-    decompress_text_RLE = open('decompress_text_RLE', 'w')
+    decompress_text_RLE = open('files/decompress_text_RLE', 'w')
     for d in decompressed_RLE:
         decompress_text_RLE.write(d)
     decompress_text_RLE.close()

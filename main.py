@@ -29,9 +29,10 @@ print('It is md5 is: '+ str(md5_original))
 # START LZW
 start_LZW(text)
 
-file_path1 = r"compress_text_LZW"
+file_path1 = r"files/compress_text_LZW"
+file_path2 = r"files/decompress_text_LZW"
 print('Compress: '+str(file_size(file_path1)))
-md5_LZW = hashfile(open(file_path1, 'rb'), hashlib.md5())
+md5_LZW = hashfile(open(file_path2, 'rb'), hashlib.md5())
 
 if md5_LZW == md5_original:
     print('File is intact, md5 is: '+str(md5_LZW))
@@ -39,9 +40,10 @@ if md5_LZW == md5_original:
 # start RLE
 start_RLE(text)
 
-file_path2 = r"compress_text_RLE"
-print('Compress: '+str(file_size(file_path2))+' bytes')
-md5_RLE = hashfile(open(file_path2, 'rb'), hashlib.md5())
+file_path3 = r"files/compress_text_RLE"
+file_path4 = r"files/decompress_text_RLE"
+print('Compress: '+str(file_size(file_path3))+' bytes')
+md5_RLE = hashfile(open(file_path4, 'rb'), hashlib.md5())
 
 if md5_LZW == md5_original:
     print('File is intact, md5 is: '+str(md5_LZW))
