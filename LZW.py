@@ -51,13 +51,5 @@ def LWZ_decompress(compressed):
         w = entry
     return result.getvalue()
 
-print(r'''
- __       ________  ____    __    ____ 
-|  |     |       /  \   \  /  \  /   / 
-|  |     `---/  /    \   \/    \/   /  
-|  |        /  /      \            /   
-|  `----.  /  /----.   \    /\    /    
-|_______| /________|    \__/  \__/     
 
-''')
 
