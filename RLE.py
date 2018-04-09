@@ -28,8 +28,6 @@ def RLE_decode(lst):
         q += character * count
     return q
 
-
-# Method call
 print(r'''
 
 .______       __       _______ 
