@@ -8,7 +8,7 @@ def start_LZW(text):
     compressed_LZW = LWZ_compress(text)
     T2c = time.time()
     # scrivo su file il testo compresso
-    compress_text_LZW = open('files/compress_text_LZW', 'w')
+    compress_text_LZW = open('files_executed/compress_text_LZW', 'w')
     for c in compressed_LZW:
         compress_text_LZW.write(str(c))
     compress_text_LZW.close()
@@ -20,7 +20,7 @@ def start_LZW(text):
     decompressed_LZW = LWZ_decompress(compressed_LZW)
     T2d = time.time()
     # scrivo su file il testo decompresso
-    decompress_text_LZW = open('files/decompress_text_LZW', 'w')
+    decompress_text_LZW = open('files_executed/decompress_text_LZW', 'w')
     for d in decompressed_LZW:
         decompress_text_LZW.write(d)
     decompress_text_LZW.close()
@@ -33,7 +33,7 @@ def start_RLE(text):
     compressed_RLE = RLE_encode(text)
     T2c = time.time()
     # scrivo su file il testo compresso
-    compress_text_RLE = open('files/compress_text_RLE', 'w')
+    compress_text_RLE = open('files_executed/compress_text_RLE', 'w')
     for c in compressed_RLE:
         compress_text_RLE.write(str(c))
     compress_text_RLE.close()
@@ -45,13 +45,25 @@ def start_RLE(text):
     decompressed_RLE = RLE_decode(compressed_RLE)
     T2d = time.time()
     # scrivo su file il testo decompresso
-    decompress_text_RLE = open('files/decompress_text_RLE', 'w')
+    decompress_text_RLE = open('files_executed/decompress_text_RLE', 'w')
     for d in decompressed_RLE:
         decompress_text_RLE.write(d)
     decompress_text_RLE.close()
 
     print('Done Decompression in: %.3f seconds'%(T2d - T1d))
 
+def output(lock, message):
+    lock.acquire()
+    print(message)
+    lock.release()
+
+def get_shareable_files():
+    files_list = []
+    for root, dirs, files in os.walk("files"):
+        for file in files:
+            files_list.append(file)
+
+    return files_list
 
 def hashfile(file, hasher, blocksize=65536):
 
@@ -73,3 +85,14 @@ def convert_size(size_bytes):
    p = math.pow(1024, i)
    s = round(size_bytes / p, 2)
    return "%s %s" % (s, size_name[i])
+
+def stampa_binario(text,file_path):
+    binario = ' '.join(format(x, 'b') for x in bytearray(text, 'utf-8'))
+
+    l = file_path.split('.')
+    new_path= l[0]+str('_binary.')+l[1]
+
+    testo_binario = open('./files/'+new_path, 'w')
+    for c in binario:
+        testo_binario.write(str(c))
+    testo_binario.close()
