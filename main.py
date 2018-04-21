@@ -1,11 +1,13 @@
+from algorithms.LZW import *
+from algorithms.RLE import *
+from algorithms.ARITM import *
 from helper import *
 import hashlib, threading, sys
-import time
 
 out_lck = threading.Lock()
 
 while True:
-
+    '''
     output(out_lck, "Select one of the following options ('e' to exit): ")
     files_list = get_shareable_files()
     for idx, file in enumerate(files_list):
@@ -13,6 +15,7 @@ while True:
 
     int_option = None
     dentro = False
+    
     while int_option is None:
         try:
             option = input()
@@ -23,10 +26,11 @@ while True:
             # apro il file da comprimere
             file_path = './files/'+file
             with open(file_path, 'r') as f:
-                text = f.read()
+                text_old = f.read()
+            text = text_old[3:]
         except SyntaxError:
             option = None
-
+    
         if option is None:
             output(out_lck, "Please select an option")
         elif option == 'e':
@@ -37,12 +41,21 @@ while True:
                 int_option = int(option)
             except ValueError:
                 print("A number is required")
+   
         dentro = True
-        while dentro :
-            output(out_lck, "Select one of the following options ('e' to exit): ")
-            output(out_lck, "1: LZW RLE                               ")
-            output(out_lck, "2: Stampa binario                                 ")
-            output(out_lck, "3: Log in (to self)                                ")
+         '''
+    file_path = './files/lotr.txt'
+    with open(file_path, 'r') as f:
+        text_old = f.read()
+    text = text_old#[3:]
+    dentro = True
+    while dentro :
+            output(out_lck, "\nSelect one of the following options ('e' to exit): ")
+            output(out_lck, "0: RLE ")
+            output(out_lck, "1: LZW ")
+            output(out_lck, "2: Aritmetic Compression ")
+            output(out_lck, "3: Binario ")
+            output(out_lck, "4: Exit ")
 
             int_option = None
             while int_option is None:
@@ -58,8 +71,32 @@ while True:
                         int_option = int(option)
                     except ValueError:
                         output(out_lck, "A number is required")
+            if int_option == 0:
+                md5_original = hashfile(open(file_path, 'rb'), hashlib.md5())
+                print('File size is: ' + str(file_size(file_path)))
+                print('It is md5 is: ' + str(md5_original))
+                ######################################################################
+                print(r'''
+                                   ___       ___       ___   
+                                  /\  \     /\__\     /\  \  
+                                 /::\  \   /:/  /    /::\  \ 
+                                /::\:\__\ /:/__/    /::\:\__\
+                                \;:::/  / \:\  \    \:\:\/  /
+                                 |:\/__/   \:\__\    \:\/  / 
+                                  \|__|     \/__/     \/__/  
+                               ''')
+                # start RLE
+                start_RLE(text)
+                file_path3 = r"files_executed/compress_text_RLE"
+                file_path4 = r"files_executed/decompress_text_RLE"
+                print('Compress: ' + str(file_size(file_path3)) + ' bytes')
+                md5_RLE = hashfile(open(file_path4, 'rb'), hashlib.md5())
 
-            if int_option == 1:
+                if md5_RLE == md5_original:
+                    print('File is intact, md5 is: ' + str(md5_RLE))
+                ######################################################################
+                dentro = False
+            elif int_option == 1:
                 md5_original = hashfile(open(file_path, 'rb'), hashlib.md5())
                 print('File size is: ' + str(file_size(file_path)))
                 print('It is md5 is: ' + str(md5_original))
@@ -82,31 +119,27 @@ while True:
 
                 if md5_LZW == md5_original:
                     print('File is intact, md5 is: ' + str(md5_LZW))
-                ######################################################################
-                print(r'''
-                    ___       ___       ___   
-                   /\  \     /\__\     /\  \  
-                  /::\  \   /:/  /    /::\  \ 
-                 /::\:\__\ /:/__/    /::\:\__\
-                 \;:::/  / \:\  \    \:\:\/  /
-                  |:\/__/   \:\__\    \:\/  / 
-                   \|__|     \/__/     \/__/  
-                ''')
-                # start RLE
-                start_RLE(text)
-                file_path3 = r"files_executed/compress_text_RLE"
-                file_path4 = r"files_executed/decompress_text_RLE"
-                print('Compress: ' + str(file_size(file_path3)) + ' bytes')
-                md5_RLE = hashfile(open(file_path4, 'rb'), hashlib.md5())
 
-                if md5_LZW == md5_original:
-                    print('File is intact, md5 is: ' + str(md5_LZW))
-                ######################################################################
                 dentro = False
             elif int_option == 2:
-                stampa_binario(text, file_path)
+                md5_original = hashfile(open(file_path, 'rb'), hashlib.md5())
+                print('File size is: ' + str(file_size(file_path)))
+                print('It is md5 is: ' + str(md5_original))
+                ######################################################################
+                start_Aritm(text)
+                file_path5 = r"files_executed/compress_text_Aritm"
+                file_path6 = r"files_executed/decompress_text_Aritm"
+                print('Compress: ' + str(file_size(file_path5)) + ' bytes')
+                md5_Aritm = hashfile(open(file_path6, 'rb'), hashlib.md5())
+
+                if md5_Aritm == md5_original:
+                    print('File is intact, md5 is: ' + str(md5_Aritm))
+
                 dentro = False
             elif int_option == 3:
+                stampa_binario(text, file_path)
+                dentro = False
+            elif int_option == 4:
                 dentro = False
                 sys.exit()          # Interrompo l'esecuzione
             else:
