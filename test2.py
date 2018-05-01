@@ -47,7 +47,7 @@ class lz77:
                     break
         return length, offset
 
-    def compress(self, file, DEBUG=False):
+    def compress(self, file, DEBUG=True):
         """compress(inputFileLocations, DEBUG)
             Give the input file locations as first argument and for debugging provide second argument
             as True
@@ -70,7 +70,8 @@ class lz77:
         outFile = ''.join(outFile[:-1] + ['.lz77'])
         l = len(ext)
         out = bitarray(endian='big')
-        out.frombytes(chr(l))
+        usa = chr(l)
+        out.frombytes(usa)
         for i in ext:
             out.frombytes(i)
         searchBuffer = [None] * self.searchBufferSize
@@ -185,27 +186,28 @@ class lz77:
 
 
 if __name__ == '__main__':
-    arg = sys.argv[1:]
-    if arg[0] == '-h' or arg[0] == '--h' or arg[0] == '-help':
-        print("usage lz77.py [-c | -d ] filename")
-        print("option:")
-        print("-c\t\t\t:Compress data.")
-        print("-d\t\t\t:Decompress data.")
-        exit(0)
-    elif arg[0] == '-c':
+
+    arg1 = '-c'
+    arg2 = 'lotr'
+
+    if arg1 == '-c':
         l = lz77()
         try:
             print('Compressing...')
-            l.compress(arg[1])
-        except:
-            print('Compression Unseccessfull.')
+            l.compress(arg2)
+        except ValueError:
+            # print('Compression Unseccessfull.')
+            print('ValueError')
+            exit(1)
+        except Exception as inst:
+            print('Error: ' + str(inst))
             exit(1)
         print('Compression Seccessfull.')
-    elif arg[0] == '-d':
+    elif arg1 == '-d':
         l = lz77()
         try:
             print('Decompressing...')
-            l.decompress(arg[1])
+            l.decompress(arg2)
         except:
             print('Decompression Unseccessfull')
             exit(1)
