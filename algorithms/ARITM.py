@@ -101,15 +101,31 @@ for str in b'DABDDB DABDDBBDDBA ABRACADABRA TOBEORNOTTOBEORTOBEORNOT'.split():
         raise Exception("\tHowever that is incorrect!")
 '''
 
-def start_Aritm(text):
+def start_Aritm(text, file_path):
+    list_enc = []
+    list_dec = []
     radix = 10  # can be any integer greater or equal with 2
-    compress_text_Aritm = open('files_executed/compress_text_Aritm', 'w')
-    for str in bytearray(text, encoding='utf-8').split():
+
+    for a in text:
+        str = bytearray(a, encoding='utf-8')
         enc, pow, freq = arithmethic_coding(str, radix)
         dec = arithmethic_decoding(enc, radix, pow, freq)
-        compress_text_Aritm.write(enc)
+        list_enc.append(enc)
+        list_dec.append(dec)
 
+    # scrivo il file compresso
+    '''compress_text_Aritm = open('files_executed/' + file_path + '_c_Aritm', 'w')
+    for l in list_enc:
+        compress_text_Aritm.write()
     compress_text_Aritm.close()
+    '''
+    # scrivo file decompresso
+    decompress_text_Aritm = open('files_executed/' + file_path + '_d_Aritm', 'w')
+    for l in list_dec:
+        decompress_text_Aritm.write(l.decode("utf-8"))
+    decompress_text_Aritm.close()
+
+
     '''
     compress_text_Aritm = open('files_executed/compress_text_Aritm', 'w')
 
@@ -120,3 +136,7 @@ def start_Aritm(text):
     dec = arithmethic_decoding(enc, radix, pow, freq)
     print(dec)
     '''
+
+    a = 'files_executed/'+file_path+'_c_Aritm'
+    b = 'files_executed/'+file_path+'_d_Aritm'
+    return a, b

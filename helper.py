@@ -9,7 +9,7 @@ def output(lock, message):
 
 def get_shareable_files():
     files_list = []
-    for root, dirs, files in os.walk("files"):
+    for root, dirs, files in os.walk("files_executed"):
         for file in files:
             files_list.append(file)
 

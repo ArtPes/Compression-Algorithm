@@ -185,7 +185,7 @@ class lz77:
 
 
 if __name__ == '__main__':
-    arg = sys.argv[1:]
+    arg = 'lotr.txt'
     if arg[0] == '-h' or arg[0] == '--h' or arg[0] == '-help':
         print("usage lz77.py [-c | -d ] filename")
         print("option:")

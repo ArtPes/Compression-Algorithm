@@ -44,11 +44,28 @@ while True:
    
         dentro = True
          '''
-    file_path = './files/lotr.txt'
+    #creo lista files
+    files_list = get_shareable_files()
+    for idx, file in enumerate(files_list):
+        output(out_lck, str(idx) + ": " + file)
+
+    option = input()
+    for idx, file in enumerate(files_list):  # Ricerca del file selezionato
+        if idx == int(option):
+            found = True
+            output(out_lck, "Adding file " + file)
+            # apro il file da comprimere
+            file_path = './files_executed/' + file
+
+
+    #file_path = './files_executed/lotr_c_LZW'
     with open(file_path, 'r') as f:
         text_old = f.read()
     text = text_old#[3:]
     dentro = True
+    # prendo solo nome file
+    nf= file_path.split('/')
+    new_file_path = nf[2].split('.')[0]
     while dentro :
             output(out_lck, "\nSelect one of the following options ('e' to exit): ")
             output(out_lck, "0: RLE ")
@@ -86,9 +103,9 @@ while True:
                                   \|__|     \/__/     \/__/  
                                ''')
                 # start RLE
-                start_RLE(text)
-                file_path3 = r"files_executed/compress_text_RLE"
-                file_path4 = r"files_executed/decompress_text_RLE"
+                file_path3, file_path4 = start_RLE(text, new_file_path)
+                #file_path3 = r"files_executed/compress_text_RLE"
+                #file_path4 = r"files_executed/decompress_text_RLE"
                 print('Compress: ' + str(file_size(file_path3)) + ' bytes')
                 md5_RLE = hashfile(open(file_path4, 'rb'), hashlib.md5())
 
@@ -111,9 +128,9 @@ while True:
                    \/__/     \/__/     \/__/  
                 ''')
                 # START LZW
-                start_LZW(text)
-                file_path1 = r"files_executed/compress_text_LZW"
-                file_path2 = r"files_executed/decompress_text_LZW"
+                file_path1, file_path2 = start_LZW(text, new_file_path)
+                #file_path1 = r"files_executed/compress_text_LZW"
+                #file_path2 = r"files_executed/decompress_text_LZW"
                 print('Compress: ' + str(file_size(file_path1)) + ' bytes')
                 md5_LZW = hashfile(open(file_path2, 'rb'), hashlib.md5())
 
@@ -126,15 +143,16 @@ while True:
                 print('File size is: ' + str(file_size(file_path)))
                 print('It is md5 is: ' + str(md5_original))
                 ######################################################################
-                start_Aritm(text)
-                file_path5 = r"files_executed/compress_text_Aritm"
-                file_path6 = r"files_executed/decompress_text_Aritm"
+                file_path5, file_path6 = start_Aritm(text, new_file_path)
+                #file_path5 = r"files_executed/"+new_file_path+"c_Aritm"
+                #file_path6 = r"files_executed/d_Aritm"
                 print('Compress: ' + str(file_size(file_path5)) + ' bytes')
                 md5_Aritm = hashfile(open(file_path6, 'rb'), hashlib.md5())
 
                 if md5_Aritm == md5_original:
                     print('File is intact, md5 is: ' + str(md5_Aritm))
-
+                else:
+                    print('File IS NOT intact, md5 is: ' + str(md5_Aritm))
                 dentro = False
             elif int_option == 3:
                 stampa_binario(text, file_path)

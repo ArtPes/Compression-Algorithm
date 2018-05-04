@@ -31,12 +31,12 @@ def RLE_decode(lst):
     return q
 
 
-def start_RLE(text):
+def start_RLE(text,file_path):
     T1c = time.time()
     compressed_RLE = RLE_encode(text)
     T2c = time.time()
     # scrivo su file il testo compresso
-    compress_text_RLE = open('files_executed/compress_text_RLE', 'w')
+    compress_text_RLE = open('files_executed/'+file_path+'_c_RLE', 'w')
     for c in compressed_RLE:
         compress_text_RLE.write(str(c))
     compress_text_RLE.close()
@@ -48,9 +48,13 @@ def start_RLE(text):
     decompressed_RLE = RLE_decode(compressed_RLE)
     T2d = time.time()
     # scrivo su file il testo decompresso
-    decompress_text_RLE = open('files_executed/decompress_text_RLE', 'w')
+    decompress_text_RLE = open('files_executed/'+file_path+'_d_RLE', 'w')
     for d in decompressed_RLE:
         decompress_text_RLE.write(d)
     decompress_text_RLE.close()
 
     print('Done Decompression in: %.3f seconds'%(T2d - T1d))
+
+    b = 'files_executed/'+file_path+'_d_RLE'
+    a = 'files_executed/'+file_path+'_c_RLE'
+    return a,b

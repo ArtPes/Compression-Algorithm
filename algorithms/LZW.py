@@ -58,13 +58,13 @@ def LWZ_decompress(compressed):
     return result.getvalue()
 
 
-def start_LZW(text):
+def start_LZW(text,file_path):
     T1c = time.time()
     # comprimo il testo
     compressed_LZW = LWZ_compress(text)
     T2c = time.time()
     # scrivo su file il testo compresso
-    compress_text_LZW = open('files_executed/compress_text_LZW', 'w')
+    compress_text_LZW = open('files_executed/'+file_path+'_c_LZW', 'w')
     for c in compressed_LZW:
         compress_text_LZW.write(str(c))
     compress_text_LZW.close()
@@ -76,9 +76,14 @@ def start_LZW(text):
     decompressed_LZW = LWZ_decompress(compressed_LZW)
     T2d = time.time()
     # scrivo su file il testo decompresso
-    decompress_text_LZW = open('files_executed/decompress_text_LZW', 'w')
+    decompress_text_LZW = open('files_executed/'+file_path+'_d_LZW', 'w')
     for d in decompressed_LZW:
         decompress_text_LZW.write(d)
     decompress_text_LZW.close()
 
     print('Done Decompression in: %.3f seconds' % (T2d - T1d))
+
+    a = 'files_executed/'+file_path+'_c_LZW'
+    b = 'files_executed/'+file_path+'_d_LZW'
+
+    return a, b
