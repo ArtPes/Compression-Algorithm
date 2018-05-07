@@ -1,6 +1,6 @@
+from algorithms.Arithmetic import *
 from algorithms.LZW import *
 from algorithms.RLE import *
-from algorithms.ARITM import *
 from helper import *
 import hashlib, threading, sys
 
@@ -143,7 +143,8 @@ while True:
                 print('File size is: ' + str(file_size(file_path)))
                 print('It is md5 is: ' + str(md5_original))
                 ######################################################################
-                file_path5, file_path6 = start_Aritm(text, new_file_path)
+                Arithmetic(text)
+                '''file_path5, file_path6 = start_Aritm(text, new_file_path)
                 #file_path5 = r"files_executed/"+new_file_path+"c_Aritm"
                 #file_path6 = r"files_executed/d_Aritm"
                 print('Compress: ' + str(file_size(file_path5)) + ' bytes')
@@ -153,6 +154,7 @@ while True:
                     print('File is intact, md5 is: ' + str(md5_Aritm))
                 else:
                     print('File IS NOT intact, md5 is: ' + str(md5_Aritm))
+                '''
                 dentro = False
             elif int_option == 3:
                 stampa_binario(text, file_path)
