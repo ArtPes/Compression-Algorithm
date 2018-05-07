@@ -3,7 +3,6 @@ import time
 
 
 def LWZ_compress(uncompressed):
-    """Comprime una stringa in una lista di simboli."""
 
     # costruisco il dizionario
     dict_size = 256
@@ -33,9 +32,8 @@ def LWZ_compress(uncompressed):
 
 
 def LWZ_decompress(compressed):
-    """Decomprime una stringa in una lista di simboli."""
-    # analogo alla compressione
 
+    # analogo alla compressione
     dict_size = 256
     dictionary = {i: chr(i) for i in range(dict_size)}
 

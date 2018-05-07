@@ -1,12 +1,12 @@
-import decimal
+import decimal, time
 from decimal import Decimal
 
-decimal.getcontext().prec = 100
+decimal.getcontext().prec = 150
 
 
 def encode(string, probabilities):
     """Encodes provided string using arithmetic coding."""
-    assert len(string) < 100, "String length must be less than 29 but is {}.".format(len(string))
+    assert len(string) < 29, "String length must be less than 29 but is {}.".format(len(string))
     string = string + "#"
     lower_bound = Decimal(0)
     upper_bound = Decimal(1)
@@ -35,12 +35,12 @@ def decode(encoded, probabilities):
 
 def get_char_in_range(encoded, probabilities):
     for k, v in probabilities.items():
-        #if encoded >= probabilities.get(k)[0] and encoded < probabilities.get(k)[1]:
+        # if encoded >= probabilities.get(k)[0] and encoded < probabilities.get(k)[1]:
         if probabilities.get(k)[0] <= encoded < probabilities.get(k)[1]:
             return k
 
 
-def Arithmetic(text):
+def start_Arithmetic(text, file_path):
     probabilities = {
         "a": (Decimal(0.00), Decimal(0.10)),
         "b": (Decimal(0.10), Decimal(0.15)),
@@ -71,26 +71,40 @@ def Arithmetic(text):
         "#": (Decimal(0.99), Decimal(1.0))
     }
 
-    probabilities2 = {
-        "a": (0.00, 0.30),
-        "b": (0.30, 0.45),
-        "c": (0.45, 0.70),
-        "d": (0.70, 0.80),
-        "e": (0.80, 1.00)
-    }
+    lista_enc = []
+    lista_dec = []
+    T1c = time.time()
 
-    lista = []
-
-    string = "CIAOOO ciao ciao"
-
+    # comprimo il testo
     for s in text.split():
         encoded = encode(s.lower(), probabilities)
-        decoded = decode(encoded, probabilities)
-        lista.append(decoded)
+        # decoded = decode(encoded, probabilities)
+        lista_enc.append(encoded)
+    T2c = time.time()
 
-    aa = ''
-    for l in lista:
-        aa = str(aa) + str(l)+' '
+    # scrivo su file il testo compresso
+    compress_text_ARITHM = open('files_executed/' + file_path + '_c_ARITHM', 'w')
+    for c in lista_enc:
+        compress_text_ARITHM.write(str(c) + ' ')
+    compress_text_ARITHM.close()
 
-    print(aa)
+    print('Done Compression in: %.3f seconds' % (T2c - T1c))
 
+    T1d = time.time()
+    # decomprimo il testo
+    for l in lista_enc:
+        decoded = decode(l, probabilities)
+        lista_dec.append(decoded)
+    T2d = time.time()
+    # scrivo su file il testo decompresso
+    decompress_text_ARITHM = open('files_executed/' + file_path + '_d_ARITHM', 'w')
+    for d in lista_dec:
+        decompress_text_ARITHM.write(str(d) + ' ')
+    decompress_text_ARITHM.close()
+
+    print('Done Decompression in: %.3f seconds' % (T2d - T1d))
+
+    a = 'files_executed/' + file_path + '_c_ARITHM'
+    b = 'files_executed/' + file_path + '_d_ARITHM'
+
+    return a, b

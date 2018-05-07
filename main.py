@@ -143,11 +143,9 @@ while True:
                 print('File size is: ' + str(file_size(file_path)))
                 print('It is md5 is: ' + str(md5_original))
                 ######################################################################
-                Arithmetic(text)
-                '''file_path5, file_path6 = start_Aritm(text, new_file_path)
-                #file_path5 = r"files_executed/"+new_file_path+"c_Aritm"
-                #file_path6 = r"files_executed/d_Aritm"
+                file_path5, file_path6 = start_Arithmetic(text, new_file_path)
                 print('Compress: ' + str(file_size(file_path5)) + ' bytes')
+                '''
                 md5_Aritm = hashfile(open(file_path6, 'rb'), hashlib.md5())
 
                 if md5_Aritm == md5_original:
