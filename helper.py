@@ -42,10 +42,10 @@ def convert_size(size_bytes):
 def stampa_binario(text, file_path):
     binario = ' '.join(format(x, 'b') for x in bytearray(text, 'utf-8'))
 
-    l = file_path.split('.')
-    new_path = l[0] + str('_binary.') + l[1]
+    #l = file_path.split('.')
+    #new_path = l[0] + str('_binary.') + l[1]
 
-    testo_binario = open('./files/' + new_path, 'w')
+    testo_binario = open('./files_executed/' + file_path + str('_binary.txt'), 'w')
     for c in binario:
         testo_binario.write(str(c))
     testo_binario.close()

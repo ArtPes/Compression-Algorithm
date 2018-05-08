@@ -155,7 +155,7 @@ while True:
                 '''
                 dentro = False
             elif int_option == 3:
-                stampa_binario(text, file_path)
+                stampa_binario(text, new_file_path)
                 dentro = False
             elif int_option == 4:
                 dentro = False

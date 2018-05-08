@@ -1,11 +1,11 @@
 import decimal, time
 from decimal import Decimal
 
-decimal.getcontext().prec = 150
+decimal.getcontext().prec = 100
 
 
 def encode(string, probabilities):
-    """Encodes provided string using arithmetic coding."""
+
     assert len(string) < 29, "String length must be less than 29 but is {}.".format(len(string))
     string = string + "#"
     lower_bound = Decimal(0)
