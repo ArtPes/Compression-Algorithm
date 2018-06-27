@@ -4,8 +4,8 @@ import time
 
 def LWZ_compress(text):
     # costruisco il dizionario
-    dict_size = 256
-    dictionary = {chr(i): i for i in range(dict_size)}
+    dict_size = 127
+    dictionary = {chr(i): i for i in range(0, dict_size)}
 
     # prefisso NULLO
     w = ""

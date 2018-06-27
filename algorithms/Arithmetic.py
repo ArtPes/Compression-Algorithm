@@ -1,11 +1,11 @@
 import decimal, time
 from decimal import Decimal
+import collections
 
 decimal.getcontext().prec = 100
 
 
 def encode(string, probabilities):
-
     assert len(string) < 29, "String length must be less than 29 but is {}.".format(len(string))
     string = string + "#"
     lower_bound = Decimal(0)
@@ -38,6 +38,11 @@ def get_char_in_range(encoded, probabilities):
         # if encoded >= probabilities.get(k)[0] and encoded < probabilities.get(k)[1]:
         if probabilities.get(k)[0] <= encoded < probabilities.get(k)[1]:
             return k
+
+
+# crea dizionario frequenze
+def filecharcount(openfile):
+    return sorted(collections.Counter(c for l in openfile for c in l).items())
 
 
 def start_Arithmetic(text, file_path):
