@@ -29,7 +29,7 @@ def LWZ_compress(text):
         print(a)
     print(len(dictionary))
     '''
-    print("IL DIZIONARIO: " + str(dictionary) + " \nlungo: " + str(len(dictionary)))
+    #print("IL DIZIONARIO: " + str(dictionary) + " \nlungo: " + str(len(dictionary)))
     return result
 
 

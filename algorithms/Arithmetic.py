@@ -1,7 +1,7 @@
 import decimal, time
 from decimal import Decimal
 import collections
-
+from prova import *
 decimal.getcontext().prec = 100
 
 
@@ -46,7 +46,8 @@ def filecharcount(openfile):
 
 
 def start_Arithmetic(text, file_path):
-    probabilities = {
+
+    probabilities2 = {
         "a": (Decimal(0.00), Decimal(0.10)),
         "b": (Decimal(0.10), Decimal(0.15)),
         "c": (Decimal(0.15), Decimal(0.19)),
@@ -76,6 +77,7 @@ def start_Arithmetic(text, file_path):
         "#": (Decimal(0.99), Decimal(1.0))
     }
 
+    probabilities = probabilita()
     lista_enc = []
     lista_dec = []
     T1c = time.time()
