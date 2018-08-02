@@ -1,109 +1,142 @@
-import decimal, time
+import sys
+import random
+import string
+
+import decimal
 from decimal import Decimal
-import collections
-from prova import *
 
-decimal.getcontext().prec = 100
+decimal.getcontext().prec = 25
 
 
-def encode(string, probabilities):
-    assert len(string) < 29, "String length must be less than 29 but is {}.".format(len(string))
-    string = string + "#"
-    lower_bound = Decimal(0)
-    upper_bound = Decimal(1)
+def encode(encode_str, N):
+    asciiDict = {chr(i) for i in range(129)}
+    num_let = len(asciiDict)
+    count = dict.fromkeys(asciiDict, 1)     # probability table
+    cdf_range = dict.fromkeys(asciiDict, 0)
+    pdf = dict.fromkeys(asciiDict, 0)
 
-    for s in string:
-        cur_range = Decimal(upper_bound - lower_bound)
-        upper_bound = lower_bound + cur_range * probabilities.get(s)[1]
-        lower_bound = lower_bound + cur_range * probabilities.get(s)[0]
 
+    low = 0
+    high = Decimal(1) / Decimal(num_let)
+
+    for key, value in sorted(cdf_range.items()):
+        cdf_range[key] = [low, high]
+        low = high
+        high += Decimal(1) / Decimal(num_let)
+
+    for key, value in sorted(pdf.items()):
+        pdf[key] = Decimal(1) / Decimal(num_let)
+
+    # for key, value in sorted(cdf_range.items()):
+    #   print key, value
+
+    # for key, value in sorted(pdf.items()):
+    #   print key, value
+
+    i = num_let
+
+    lower_bound = 0  # upper bound
+    upper_bound = 1  # lower bound
+
+    u = 0
+
+    # go thru every symbol in the string
+    for sym in encode_str:
+        i += 1
+        u += 1
+        count[sym] += 1
+
+        curr_range = upper_bound - lower_bound  # current range
+        upper_bound = lower_bound + (curr_range * cdf_range[sym][1])  # upper_bound
+        lower_bound = lower_bound + (curr_range * cdf_range[sym][0])  # lower bound
+
+        # update cdf_range after N symbols have been read
+        if (u == N):
+            u = 0
+
+            for key, value in sorted(pdf.items()):
+                pdf[key] = Decimal(count[key]) / Decimal(i)
+
+            low = 0
+            for key, value in sorted(cdf_range.items()):
+                high = pdf[key] + low
+                cdf_range[key] = [low, high]
+                low = high
+    print(lower_bound)
     return lower_bound
 
 
-def decode(encoded, probabilities):
-    decoded = ""
-    new_encoded = encoded
-    symbol = get_char_in_range(new_encoded, probabilities)
+def decode(encoded, strlen, every):
+    decoded_str = ""
 
-    while symbol != "#" and len(decoded) < 30:
-        decoded += symbol
-        cur_range = Decimal(probabilities.get(symbol)[1] - probabilities.get(symbol)[0])
-        new_encoded = (new_encoded - probabilities.get(symbol)[0]) / cur_range
-        symbol = get_char_in_range(new_encoded, probabilities)
+    asciiDict = {chr(i) for i in range(129)}
+    num_let = len(asciiDict)
+    count = dict.fromkeys(asciiDict, 1)     # probability table
+    cdf_range = dict.fromkeys(asciiDict, 0)
+    pdf = dict.fromkeys(asciiDict, 0)
 
-    return decoded
-
-
-def get_char_in_range(encoded, probabilities):
-    for k, v in probabilities.items():
-        # if encoded >= probabilities.get(k)[0] and encoded < probabilities.get(k)[1]:
-        if probabilities.get(k)[0] <= encoded < probabilities.get(k)[1]:
-            return k
-
-
-# crea dizionario frequenze
-def filecharcount(openfile):
-    return sorted(collections.Counter(c for l in openfile for c in l).items())
-
-
-def probabilita():
-    file = open("files_executed/dizionario.txt")
-
-    array = filecharcount(file)
-    lista_tuple = []
-
-    tot = 0
-    for (a, n) in array:
-        tot = n + tot
-
-    for (item, freq) in array:
-        lista_tuple.append((item, freq / tot))
-
-    probabilities = {}
     low = 0
-    for (a, b) in lista_tuple:
-        high = low + b
-        word = {a: (Decimal(low), Decimal(high))}
-        probabilities.update(word)
+    high = Decimal(1) / Decimal(num_let)
+
+    for key, value in sorted(cdf_range.items()):
+        cdf_range[key] = [low, high]
         low = high
+        high += Decimal(1) / Decimal(num_let)
 
-    return probabilities
+    for key, value in sorted(pdf.items()):
+        pdf[key] = Decimal(1) / Decimal(num_let)
+
+    lower_bound = 0  # upper bound
+    upper_bound = 1  # lower bound
+
+    k = 0
+
+    while (strlen != len(decoded_str)):
+        for key, value in sorted(pdf.items()):
+
+            curr_range = upper_bound - lower_bound  # current range
+            upper_cand = lower_bound + (curr_range * cdf_range[key][1])  # upper_bound
+            lower_cand = lower_bound + (curr_range * cdf_range[key][0])  # lower bound
+
+            if (lower_cand <= encoded < upper_cand):
+                k += 1
+                decoded_str += key
+
+                if (strlen == len(decoded_str)):
+                    break
+
+                upper_bound = upper_cand
+                lower_bound = lower_cand
+
+                count[key] += 1
+
+                if (k == every):
+                    k = 0
+                    for key, value in sorted(pdf.items()):
+                        pdf[key] = Decimal(count[key]) / Decimal(num_let + len(decoded_str))
+
+                    low = 0
+                    for key, value in sorted(cdf_range.items()):
+                        high = pdf[key] + low
+                        cdf_range[key] = [low, high]
+                        low = high
+
+    print(decoded_str)
 
 
-def start_Arithmetic(text, file_path):
-    probabilities2 = {
-        "a": (Decimal(0.00), Decimal(0.10)),
-        "b": (Decimal(0.10), Decimal(0.15)),
-        "c": (Decimal(0.15), Decimal(0.19)),
-        "d": (Decimal(0.19), Decimal(0.25)),
-        "e": (Decimal(0.25), Decimal(0.30)),
-        "f": (Decimal(0.30), Decimal(0.35)),
-        "g": (Decimal(0.35), Decimal(0.38)),
-        "h": (Decimal(0.38), Decimal(0.40)),
-        "i": (Decimal(0.40), Decimal(0.43)),
-        "j": (Decimal(0.43), Decimal(0.48)),
-        "k": (Decimal(0.48), Decimal(0.55)),
-        "l": (Decimal(0.55), Decimal(0.56)),
-        "m": (Decimal(0.56), Decimal(0.59)),
-        "n": (Decimal(0.59), Decimal(0.67)),
-        "o": (Decimal(0.67), Decimal(0.70)),
-        "p": (Decimal(0.70), Decimal(0.77)),
-        "q": (Decimal(0.77), Decimal(0.80)),
-        "r": (Decimal(0.80), Decimal(0.83)),
-        "s": (Decimal(0.83), Decimal(0.88)),
-        "t": (Decimal(0.88), Decimal(0.91)),
-        "u": (Decimal(0.91), Decimal(0.92)),
-        "v": (Decimal(0.92), Decimal(0.94)),
-        "w": (Decimal(0.93), Decimal(0.95)),
-        "x": (Decimal(0.95), Decimal(0.97)),
-        "y": (Decimal(0.95), Decimal(0.98)),
-        "z": (Decimal(0.98), Decimal(0.99)),
-        "#": (Decimal(0.99), Decimal(1.0))
-    }
+def main():
+    count = 10
+    encode_str = "ciao!!123"
+    strlen = len(encode_str)
+    every = 1
+    encoded = encode(encode_str, every)
+    decoded = decode(encoded, strlen, every)
 
-    probabilities = probabilita()
-    lista_enc = []
-    lista_dec = []
+
+if __name__ == '__main__':
+    main()
+
+
     T1c = time.time()
 
     # comprimo il testo
