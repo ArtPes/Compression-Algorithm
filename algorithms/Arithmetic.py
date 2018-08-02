@@ -1,12 +1,8 @@
-import sys
-import random
-import string
-
+import time
 import decimal
 from decimal import Decimal
 
-decimal.getcontext().prec = 25
-
+decimal.getcontext().prec = 20
 
 def encode(encode_str, N):
     asciiDict = {chr(i) for i in range(129)}
@@ -27,12 +23,6 @@ def encode(encode_str, N):
     for key, value in sorted(pdf.items()):
         pdf[key] = Decimal(1) / Decimal(num_let)
 
-    # for key, value in sorted(cdf_range.items()):
-    #   print key, value
-
-    # for key, value in sorted(pdf.items()):
-    #   print key, value
-
     i = num_let
 
     lower_bound = 0  # upper bound
@@ -51,7 +41,7 @@ def encode(encode_str, N):
         lower_bound = lower_bound + (curr_range * cdf_range[sym][0])  # lower bound
 
         # update cdf_range after N symbols have been read
-        if (u == N):
+        if u == N:
             u = 0
 
             for key, value in sorted(pdf.items()):
@@ -66,7 +56,7 @@ def encode(encode_str, N):
     return lower_bound
 
 
-def decode(encoded, strlen, every):
+def decode(encoded, every):
     decoded_str = ""
 
     asciiDict = {chr(i) for i in range(129)}
@@ -91,18 +81,19 @@ def decode(encoded, strlen, every):
 
     k = 0
 
-    while (strlen != len(decoded_str)):
+    esci = True
+    while esci:
         for key, value in sorted(pdf.items()):
-
             curr_range = upper_bound - lower_bound  # current range
             upper_cand = lower_bound + (curr_range * cdf_range[key][1])  # upper_bound
             lower_cand = lower_bound + (curr_range * cdf_range[key][0])  # lower bound
 
-            if (lower_cand <= encoded < upper_cand):
+            if lower_cand <= encoded < upper_cand:
                 k += 1
                 decoded_str += key
 
-                if (strlen == len(decoded_str)):
+                if key == "#":
+                    esci = False
                     break
 
                 upper_bound = upper_cand
@@ -110,7 +101,7 @@ def decode(encoded, strlen, every):
 
                 count[key] += 1
 
-                if (k == every):
+                if k == every:
                     k = 0
                     for key, value in sorted(pdf.items()):
                         pdf[key] = Decimal(count[key]) / Decimal(num_let + len(decoded_str))
@@ -122,32 +113,27 @@ def decode(encoded, strlen, every):
                         low = high
 
     print(decoded_str)
-
-
-def main():
-    count = 10
-    encode_str = "ciao!!123"
-    strlen = len(encode_str)
-    every = 1
-    encoded = encode(encode_str, every)
-    decoded = decode(encoded, strlen, every)
-
+    return decoded_str
 
 if __name__ == '__main__':
-    main()
 
 
     T1c = time.time()
-
+    with open("ciao.txt", 'r') as f:
+        text_old = f.read()
+    text = text_old
+    lista_enc = []
     # comprimo il testo
     for s in text.split():
-        encoded = encode(s.lower(), probabilities)
+        new_s = s+'#'
+        encoded = encode(new_s,1)
         # decoded = decode(encoded, probabilities)
         lista_enc.append(encoded)
     T2c = time.time()
 
     # scrivo su file il testo compresso
-    compress_text_ARITHM = open('files_executed/' + file_path + '_c_ARITHM', 'w')
+    #compress_text_ARITHM = open('files_executed/' + file_path + '_c_ARITHM', 'w')
+    compress_text_ARITHM = open('../files_executed/aritmetica_c_ARITHM', 'w')
     for c in lista_enc:
         compress_text_ARITHM.write(str(c) + ' ')
     compress_text_ARITHM.close()
@@ -155,20 +141,16 @@ if __name__ == '__main__':
     print('Done Compression in: %.3f seconds' % (T2c - T1c))
 
     T1d = time.time()
+    lista_dec = []
     # decomprimo il testo
     for l in lista_enc:
-        decoded = decode(l, probabilities)
+        decoded = decode(l,1)
         lista_dec.append(decoded)
     T2d = time.time()
     # scrivo su file il testo decompresso
-    decompress_text_ARITHM = open('files_executed/' + file_path + '_d_ARITHM', 'w')
+    decompress_text_ARITHM = open('../files_executed/aritmetica_d_ARITHM', 'w')
     for d in lista_dec:
-        decompress_text_ARITHM.write(str(d) + ' ')
+        decompress_text_ARITHM.write(str(d[:-1]) + ' ')
     decompress_text_ARITHM.close()
 
     print('Done Decompression in: %.3f seconds' % (T2d - T1d))
-
-    a = 'files_executed/' + file_path + '_c_ARITHM'
-    b = 'files_executed/' + file_path + '_d_ARITHM'
-
-    return a, b
